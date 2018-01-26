@@ -112,6 +112,32 @@ public class AssetBundleMaker:Editor
 
 
 
+    [MenuItem(Constant.MENU_NAME + "/Build WebGL")]
+    static void BuildWebGLBundle()
+    {
+        try
+        {
+
+
+            string selectionPath = getSelectionAssetPath();
+            Debug.Log(selectionPath);
+            AssetImporter assImporter = AssetImporter.GetAtPath(selectionPath);
+            Debug.Log(assImporter.name + ":" + assImporter.assetBundleName + ":" + assImporter.GetInstanceID());
+            assImporter.assetBundleName = System.DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss");
+            assImporter.assetBundleVariant = TARGET_FORMAT;
+            assImporter.SaveAndReimport();
+            BuildAssetBundles(BuildTarget.WebGL, "WebGL");
+        }
+        catch (System.Exception ex)
+        {
+
+            Debug.Log(ex.Message);
+            EditorUtility.DisplayDialog("error", ex.Message + " please select the real perfabs", "sure");
+
+        }
+
+
+    }
 
 
 
