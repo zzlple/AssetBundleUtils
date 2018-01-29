@@ -141,6 +141,44 @@ public class AssetBundleMaker:Editor
 
 
 
+    [MenuItem(Constant.MENU_NAME + "/Build WebGL Player")]
+    static void BuildWebGLPlayer()
+    {
+        try
+        {
+
+            List<string> paths = new List<string>();
+            EditorBuildSettingsScene[] ebs=  EditorBuildSettings.scenes;
+            for (int i = 0; i < ebs.Length;i++){
+
+                paths.Add(ebs[i].path);
+
+
+            }
+
+
+
+
+            BuildPlayer(paths.ToArray(),BuildTarget.WebGL,"WebGL.unity3d");
+
+        }
+        catch (System.Exception ex)
+        {
+
+            Debug.Log(ex.Message);
+            EditorUtility.DisplayDialog("error", ex.Message + " please select the real perfabs", "sure");
+
+        }
+
+
+    }
+
+
+
+
+
+
+
 	[MenuItem (Constant.MENU_NAME+"/Build iOS Android")]
 	static void BuildBundle ()
 	{
@@ -242,6 +280,25 @@ public class AssetBundleMaker:Editor
 			, buildTarget);
 	AssetDatabase.Refresh ();
 	}
+
+
+
+    static void BuildPlayer(string[] levels ,BuildTarget buildTarget, string platform)
+    {
+        Caching.CleanCache();
+        string targetPath = TARGET_DIR + Path.DirectorySeparatorChar + platform;
+        Debug.Log(targetPath);
+        if (!File.Exists(targetPath))
+        {
+            Directory.CreateDirectory(targetPath);
+        }
+        // Put the bundles in a folder called "ABs" within the Assets folder.
+        BuildPipeline.BuildPlayer(levels,targetPath,buildTarget,BuildOptions.BuildAdditionalStreamedScenes);
+        AssetDatabase.Refresh();
+    }
+
+
+
 
 
 
